@@ -1,7 +1,6 @@
 /* Copyright © 2023 Seneca Project Contributors, MIT License. */
 
-const docs = {
-}
+const docs = {}
 
 export default docs
 

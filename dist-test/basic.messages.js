@@ -1,10 +1,10 @@
+'use strict'
 // Basic progressral: sent email invite to a friend
-
-export default {
+Object.defineProperty(exports, '__esModule', { value: true })
+exports.default = {
   print: false,
   pattern: 'sys:progress',
   allow: { missing: true },
-
   calls: [
     /*
     {
@@ -35,3 +35,4 @@ export default {
     // { print: true, pattern: 'biz:null,role:mem-store,cmd:dump' },
   ],
 }
+//# sourceMappingURL=basic.messages.js.map

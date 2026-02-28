@@ -1,5 +1,4 @@
-/* Copyright © 2022 Seneca Project Contributors, MIT License. */
-
+/* Copyright © 2026 Seneca Project Contributors, MIT License. */
 
 type Options = {
   debug: boolean
@@ -16,9 +15,7 @@ const defaults = {
   end: 100,
 }
 
-
 export type ProgressOptions = Partial<Options>
-
 
 type Out = {
   ok: boolean
@@ -35,7 +32,6 @@ const INIT_OUT = {
   why: 'unknown',
 }
 
-
 function Progress(this: any, options: ProgressOptions) {
   const seneca: any = this
   const { Skip, Exact, Default, Min } = seneca.valid
@@ -50,12 +46,11 @@ function Progress(this: any, options: ProgressOptions) {
     .message('list:progress', params.ListProgress, msgListProgress)
 
   // TODO: seneca.prepare should not be affected by seneca.fix
-  seneca
-    .prepare(prepare)
+  seneca.prepare(prepare)
 
   // class SkipNumber extends Number { skip = true }
 
-  // Deliberately not importing Gubu, instead using Gubu expressions as an example. 
+  // Deliberately not importing Gubu, instead using Gubu expressions as an example.
   function makeParams() {
     return {
       CreateProgress: {
@@ -94,7 +89,6 @@ function Progress(this: any, options: ProgressOptions) {
       },
     }
   }
-
 
   async function msgCreateProgress(this: any, msg: any) {
     const seneca = this
@@ -136,7 +130,6 @@ function Progress(this: any, options: ProgressOptions) {
     return out
   }
 
-
   async function msgUpdateProgress(this: any, msg: any) {
     const seneca = this
     const out: Out = { ...INIT_OUT }
@@ -160,14 +153,11 @@ function Progress(this: any, options: ProgressOptions) {
       let stepval = 0
       if ('step' === how) {
         stepval = progress.step
-      }
-      else if ('val' === how) {
+      } else if ('val' === how) {
         stepval = entryval
-      }
-      else if ('set' === how) {
+      } else if ('set' === how) {
         stepval = 0
-      }
-      else {
+      } else {
         out.why = 'invalid-how'
         out.details = { how }
         return out
@@ -196,8 +186,7 @@ function Progress(this: any, options: ProgressOptions) {
       // Can't go beyond end.
       if (0 < progress.end && progress.end < progress.val) {
         progress.val = progress.end
-      }
-      else if (progress.end < 0 && progress.val < progress.end) {
+      } else if (progress.end < 0 && progress.val < progress.end) {
         progress.val = progress.end
       }
 
@@ -207,7 +196,7 @@ function Progress(this: any, options: ProgressOptions) {
 
       entry = await entry.save$({
         status: progress.status,
-        val: progress.val
+        val: progress.val,
       })
       progress = await progress.save$()
 
@@ -218,14 +207,12 @@ function Progress(this: any, options: ProgressOptions) {
 
       delete out.why
       out.ok = true
-    }
-    else {
+    } else {
       out.why = 'not-found'
     }
 
     return out
   }
-
 
   async function msgGetProgress(this: any, msg: any) {
     const seneca = this
@@ -245,14 +232,12 @@ function Progress(this: any, options: ProgressOptions) {
 
       delete out.why
       out.ok = true
-    }
-    else {
+    } else {
       out.why = 'not-found'
     }
 
     return out
   }
-
 
   async function msgListProgress(this: any, msg: any) {
     const seneca = this
@@ -276,17 +261,15 @@ function Progress(this: any, options: ProgressOptions) {
     return out
   }
 
-
   async function prepare(this: any) {
     const seneca = this
   }
-
 
   async function listEntries(seneca: any, full: boolean, progress: any) {
     if (full) {
       const eq = {
         progress_id: progress.id,
-        sort$: { 'when': 1 }
+        sort$: { when: 1 },
       }
       const list = await makeEntryEnt(seneca).list$(eq)
       return list
@@ -294,18 +277,16 @@ function Progress(this: any, options: ProgressOptions) {
     return []
   }
 
-
   async function checkExpired(progress: any) {
     if (
       'active' == progress.status &&
-      Date.now() < (progress.when + progress.expire)
+      Date.now() < progress.when + progress.expire
     ) {
       progress.status = 'expired'
       await progress.save$()
     }
     return progress
   }
-
 
   function makeProgressEnt(seneca: any) {
     return seneca.entity('sys/progress')
@@ -315,13 +296,10 @@ function Progress(this: any, options: ProgressOptions) {
     return seneca.entity('sys/progressentry')
   }
 
-
   return {
-    exports: {
-    }
+    exports: {},
   }
 }
-
 
 Object.assign(Progress, { defaults })
 
